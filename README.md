@@ -4,7 +4,7 @@
 </h1>
 
 <h3 align="center">
-Bem-vindo ao projeto da API Controle Financeiro! Esta é uma API RESTful construída em Node.js que oferece funcionalidades para cadastro, login, gerenciamento de perfil, categorias, consultas e transações financeiras. Siga as instruções abaixo para entender como executar o projeto e utilizar suas funcionalidades.
+Bem-vindo ao projeto da API Controle Financeiro! Esta é uma API RESTful construída em Node.js em parceiria com Felipe Romão, que oferece funcionalidades para cadastro, login, gerenciamento de perfil, categorias, consultas e transações financeiras. Siga as instruções abaixo para entender como executar o projeto e utilizar suas funcionalidades.
 </h3>
 
 
