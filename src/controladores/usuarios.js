@@ -1,4 +1,3 @@
-const jwt = require('jsonwebtoken');
 const criptograrSenha = require('../utils/criptografarSenha');
 const compararSenhas = require('../utils/compararSenhas');
 const gerarToken = require('../utils/gerarToken');
@@ -9,14 +8,13 @@ const cadastrarUsuario = async (req, res) => {
 
     try {
         const { nome, email, senha } = req.body;
-        if (!nome || !email || !senha) return res.status(400).json({ mensagem: 'Todos os campos devem ser informados' });
         const emailEncontrado = await encontrarEmailUsuario(email);
         if (emailEncontrado.rowCount > 0) return res.status(400).json({ mensagem: 'Já existe usuário cadastrado com o e-mail informado.' });
 
         const senhaCriptografada = await criptograrSenha(senha);
         const usuario = { nome, email, senhaCriptografada };
 
-        const { rows: usuarioCadastrado } = await cadastrarUsuarioBD(usuario, mesmoEmail);
+        const { rows: usuarioCadastrado } = await cadastrarUsuarioBD(usuario);
         delete usuarioCadastrado[0].senha;
 
         return res.status(201).json(usuarioCadastrado[0]);
@@ -29,7 +27,6 @@ const cadastrarUsuario = async (req, res) => {
 
 const logarUsuario = async (req, res) => {
     const { email, senha } = req.body;
-    if (!email || !senha) return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
 
     try {
         const { rows: usuariosEncontrados, rowCount } = await encontrarEmailUsuario(email);
@@ -68,12 +65,10 @@ const atualizarUsuario = async (req, res) => {
     const { id } = req.usuario;
     if (!id) return res.status(401).json({ mensagem: 'Para acessar este recurso um token de autenticação válido deve ser enviado.' });
 
-    const { nome, email, senha } = req.body;
-    if (!nome || !email || !senha) return res.status(400).json({ mensagem: 'Todos os campos devem ser informados.' });
-
     try {
+        const { nome, email, senha } = req.body;
         const emailEncontrado = await encontrarEmailUsuario(email);
-        if (emailEncontrado.rowCount > 0 && emailEncontrado.rows[0].email !== email) return res.status(400).json({ mensagem: 'O e-mail informado já está sendo utilizado por outro usuário.' });
+        if (emailEncontrado.rowCount > 0 && emailEncontrado.rows[0].id !== id) return res.status(400).json({ mensagem: 'O e-mail informado já está sendo utilizado por outro usuário.' });
 
         const senhaCriptografada = await criptograrSenha(senha);
         const usuario = { nome, email, senhaCriptografada, id };

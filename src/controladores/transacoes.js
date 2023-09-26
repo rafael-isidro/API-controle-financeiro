@@ -24,8 +24,6 @@ const listarTransacoes = async (req, res) => {
   }
 };
 
-
-
 const detalharTransacao = async (req, res) => {
   try {
     const usuarioID = req.usuario.id;
@@ -47,17 +45,10 @@ const cadastrarTransacao = async (req, res) => {
     const usuarioID = req.usuario.id;
     const { tipo, descricao, valor, data, categoria_id } = req.body;
 
-    if (!tipo || !descricao || !valor || !data || !categoria_id) {
-      return res.status(400).json({ mensagem: 'Todos os campos obrigatórios devem ser informados.' });
-    }
-
     const categoriaEncontrada = await encontrarCategoria(categoria_id);
 
     if (categoriaEncontrada.rowCount === 0) {
       return res.status(404).json({ mensagem: 'Categoria não encontrada.' });
-    }
-    if (tipo !== 'entrada' && tipo !== 'saida') {
-      return res.status(400).json({ mensagem: 'O tipo deve ser "entrada" ou "saida".' });
     }
 
     const transacaoInserida = await inserirTransacao(tipo, descricao, valor, data, categoria_id, usuarioID);
@@ -75,18 +66,10 @@ const atualizarTransacao = async (req, res) => {
     const transacaoID = req.params.id;
     const { descricao, valor, data, categoria_id, tipo } = req.body;
 
-    if (!descricao || !valor || !data || !categoria_id || !tipo) {
-      return res.status(400).json({ mensagem: 'Todos os campos obrigatórios devem ser informados.' });
-    }
-
     const categoriaEncontrada = await encontrarCategoria(categoria_id);
 
     if (categoriaEncontrada.rowCount === 0) {
       return res.status(404).json({ mensagem: 'Categoria não encontrada.' });
-    }
-
-    if (tipo !== 'entrada' && tipo !== 'saida') {
-      return res.status(400).json({ mensagem: `O tipo deve ser "entrada" ou "saida".` });
     }
 
     const transacaoUsuario = await obterTransacao(usuarioID, transacaoID);
